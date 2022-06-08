@@ -38,7 +38,7 @@ public class RecommendedTrackListActivity extends AppCompatActivity {
                 new MyRecyclerViewAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Toast.makeText(RecommendedTrackListActivity.this, "You clicked " + adapter.getItem(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RecommendedTrackListActivity.this, "You clicked " + adapter.getItemInfo(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
                     }
                 }
         );

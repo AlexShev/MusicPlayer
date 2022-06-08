@@ -39,7 +39,7 @@ public class PopularTrackListActivity extends AppCompatActivity {
                 new MyRecyclerViewAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Toast.makeText(PopularTrackListActivity.this, "You clicked " + adapter.getItem(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PopularTrackListActivity.this, "You clicked " + adapter.getItemInfo(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
                     }
                 }
         );

@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.musicplayer.Activities.Data.ArtistFile;
-import com.example.musicplayer.Activities.Data.MusicFile;
 import com.example.musicplayer.R;
 
 public class RecommendedAuthorListActivity extends AppCompatActivity {
@@ -39,7 +38,7 @@ public class RecommendedAuthorListActivity extends AppCompatActivity {
                 new MyRecyclerViewAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Toast.makeText(RecommendedAuthorListActivity.this, "You clicked " + adapter.getItem(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RecommendedAuthorListActivity.this, "You clicked " + adapter.getItemInfo(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
                     }
                 }
         );
