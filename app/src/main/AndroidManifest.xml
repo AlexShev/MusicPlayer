@@ -12,7 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicPlayer">
         <activity
-            android:name=".Activities.ListActivity"
+            android:name=".Activities.PopularTrackListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.RecommendedAuthorListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.RecommendedTrackListActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.SignInActivity"

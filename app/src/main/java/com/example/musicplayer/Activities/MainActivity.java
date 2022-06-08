@@ -94,7 +94,25 @@ public class MainActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        startActivity(new Intent(MainActivity.this, ListActivity.class));
+                        startActivity(new Intent(MainActivity.this, RecommendedTrackListActivity.class));
+                    }
+                }
+        );
+
+        findViewById(R.id.more_recommendedAuthors).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(MainActivity.this, RecommendedAuthorListActivity.class));
+                    }
+                }
+        );
+
+        findViewById(R.id.more_popularTrack).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(MainActivity.this, PopularTrackListActivity.class));
                     }
                 }
         );
