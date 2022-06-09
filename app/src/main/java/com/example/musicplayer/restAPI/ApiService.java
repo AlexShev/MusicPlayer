@@ -1,6 +1,6 @@
 package com.example.musicplayer.restAPI;
 
-import com.example.musicplayer.Activities.Data.MusicFile;
+import com.example.musicplayer.Data.MusicFile;
 
 import java.util.List;
 
