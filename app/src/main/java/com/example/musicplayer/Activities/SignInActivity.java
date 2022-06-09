@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.musicplayer.Activities.authorization.Authorizer;
+import com.example.musicplayer.authorization.Authorizer;
 import com.example.musicplayer.R;
 
 import java.util.Objects;
@@ -88,7 +88,7 @@ public class SignInActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    aBoolean = true;
+                    Toast.makeText(SignInActivity.this, "Неправильный логин или пароль", Toast.LENGTH_SHORT).show();
                 }
 
             }

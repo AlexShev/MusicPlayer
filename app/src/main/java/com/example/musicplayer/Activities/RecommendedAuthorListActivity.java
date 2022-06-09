@@ -9,7 +9,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.musicplayer.Activities.Data.ArtistFile;
+import com.example.musicplayer.ContentController;
+import com.example.musicplayer.Data.ArtistFile;
 import com.example.musicplayer.R;
 
 public class RecommendedAuthorListActivity extends AppCompatActivity {

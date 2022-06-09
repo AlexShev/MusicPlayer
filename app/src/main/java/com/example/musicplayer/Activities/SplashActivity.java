@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 
-import com.example.musicplayer.Activities.authorization.Authorizer;
+import com.example.musicplayer.authorization.Authorizer;
 import com.example.musicplayer.R;
 
 public class SplashActivity extends AppCompatActivity {

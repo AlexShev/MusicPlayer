@@ -14,8 +14,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.musicplayer.Activities.Data.ArtistFile;
-import com.example.musicplayer.Activities.Data.MusicFile;
+import com.example.musicplayer.ContentController;
+import com.example.musicplayer.Data.ArtistFile;
+import com.example.musicplayer.Data.MusicFile;
+import com.example.musicplayer.MusicFileLouder;
+import com.example.musicplayer.MusicLoader;
 import com.example.musicplayer.R;
 
 public class MainActivity extends AppCompatActivity {
