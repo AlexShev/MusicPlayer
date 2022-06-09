@@ -109,8 +109,8 @@
         <ImageButton
             android:id="@+id/circle_button_play"
             android:layout_marginHorizontal="13dp"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/ic_circle"
             android:background="@color/un_visible"/>
 
@@ -137,8 +137,9 @@
             android:background="@color/un_visible"/>
 
         <ImageButton
-            android:layout_width="18dp"
-            android:layout_height="24dp"
+            android:id="@+id/music_like_play"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginHorizontal="13dp"
             android:src="@drawable/ic_love"
             android:background="@color/un_visible"/>
