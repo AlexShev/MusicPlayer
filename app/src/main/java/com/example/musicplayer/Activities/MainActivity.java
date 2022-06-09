@@ -2,10 +2,13 @@ package com.example.musicplayer.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.view.View;
@@ -61,7 +64,22 @@ public class MainActivity extends AppCompatActivity {
                 new MyRecyclerViewAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Toast.makeText(MainActivity.this, "You clicked " + adapterRecommendedTrack.getItem(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
+
+                        MutableLiveData<String> stringUri = new MutableLiveData<>();
+                        new MusicFileLouder(MainActivity.this, stringUri).loadMusicURI(adapterRecommendedTrack.getItem(position).getPath());
+
+                        stringUri.observe(MainActivity.this, new Observer<String>() {
+                            @Override
+                            public void onChanged(String s) {
+                                Uri uri = Uri.parse(s);
+
+                                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
+                                mediaPlayer.start();
+                            }
+                        });
+
+
+                        Toast.makeText(MainActivity.this, "You clicked " + adapterRecommendedTrack.getItemInfo(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -70,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 new MyRecyclerViewAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Toast.makeText(MainActivity.this, "You clicked " + adapterRecommendedAuthors.getItem(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "You clicked " + adapterRecommendedAuthors.getItemInfo(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -79,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 new MyRecyclerViewAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Toast.makeText(MainActivity.this, "You clicked " + adapterPopularTrack.getItem(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "You clicked " + adapterPopularTrack.getItemInfo(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -94,7 +112,25 @@ public class MainActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        startActivity(new Intent(MainActivity.this, ListActivity.class));
+                        startActivity(new Intent(MainActivity.this, RecommendedTrackListActivity.class));
+                    }
+                }
+        );
+
+        findViewById(R.id.more_recommendedAuthors).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(MainActivity.this, RecommendedAuthorListActivity.class));
+                    }
+                }
+        );
+
+        findViewById(R.id.more_popularTrack).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(MainActivity.this, PopularTrackListActivity.class));
                     }
                 }
         );

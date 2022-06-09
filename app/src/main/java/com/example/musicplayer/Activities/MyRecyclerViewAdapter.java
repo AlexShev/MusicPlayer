@@ -92,9 +92,11 @@ public class MyRecyclerViewAdapter<T extends ItemDrawable>
     }
 
     // convenience method for getting data at click position
-    public String getItem(int id) {
+    public String getItemInfo(int id) {
         return musicFiles.get(id).getTitle();
     }
+
+    public T getItem(int i) { return musicFiles.get(i); }
 
     // allows clicks events to be caught
     public void setClickListener(ItemClickListener itemClickListener) {
