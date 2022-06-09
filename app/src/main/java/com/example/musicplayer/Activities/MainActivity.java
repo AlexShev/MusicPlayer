@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.musicplayer.AuthorsMusicListLoader;
 import com.example.musicplayer.ContentController;
 import com.example.musicplayer.Data.ArtistFile;
 import com.example.musicplayer.Data.MusicFile;
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
                         ContentController.Repository.setValue(musicRepository);
 
-                        new Thread(()->ContentController.MusicPlayer.getValue().start()).start();
+                        ContentController.MusicPlayer.getValue().start();
 
                        // startActivity(new Intent(MainActivity.this, PlayMusicActivity.class));
 
@@ -107,9 +108,11 @@ public class MainActivity extends AppCompatActivity {
                         MusicRepository musicRepository = new MusicRepository(ContentController.getRecommendedTracks());
                         musicRepository.setCurrent(position);
 
-                        ContentController.Repository.setValue(musicRepository);
+                        // ContentController.Repository.setValue(musicRepository);
 
-                        startActivity(new Intent(MainActivity.this, PlayMusicActivity.class));
+                        new AuthorsMusicListLoader(MainActivity.this, adapterRecommendedAuthors.getItem(position).getId()).start();
+
+                        startActivity(new Intent(MainActivity.this, AuthorTracksListActivity.class));
 
                         Toast.makeText(MainActivity.this, "You clicked " + adapterRecommendedAuthors.getItemInfo(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
                     }

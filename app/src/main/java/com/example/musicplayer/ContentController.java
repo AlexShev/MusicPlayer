@@ -73,10 +73,10 @@ public class ContentController
         recommendedAuthors.setValue(tempArt);
 
         popularTracks = new MutableLiveData<>();
-        popularTracks.setValue(new ArrayList<>(temp));
+        popularTracks.setValue(temp);
 
         authorsTracks = new MutableLiveData<>();
-        authorsTracks.setValue(temp);
+        authorsTracks.setValue(new ArrayList<>());
 
         Repository = new MutableLiveData<>();
         MusicPlayer = new MutableLiveData<>();

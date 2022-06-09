@@ -28,10 +28,10 @@ import retrofit2.Response;
 
 public class AuthorsMusicListLoader extends Thread
 {
-    private MutableLiveData<Boolean> isNormal;
+//    private MutableLiveData<Boolean> isNormal;
 
-    public AuthorsMusicListLoader(MutableLiveData<Boolean> isNormal, Context context, String id) {
-        this.isNormal = isNormal;
+    public AuthorsMusicListLoader(/*MutableLiveData<Boolean> isNormal, */Context context, String id) {
+        // this.isNormal = isNormal;
         this.context = context;
         this.id = id;
     }
@@ -61,7 +61,7 @@ public class AuthorsMusicListLoader extends Thread
             {
                 if (!response.isSuccessful())
                 {
-                    isNormal.setValue(false);
+//                    isNormal.setValue(false);
                 }
                 else {
                     try {
@@ -79,11 +79,11 @@ public class AuthorsMusicListLoader extends Thread
 
                         ContentController.postAuthorTracks(jsonObjArrayList);
 
-                        isNormal.setValue(true);
+//                        isNormal.setValue(true);
                     }
                     catch (IOException e)
                     {
-                        isNormal.setValue(false);
+//                        isNormal.setValue(false);
                         e.printStackTrace();
                         System.out.println("gbplf");
                     }
@@ -93,7 +93,7 @@ public class AuthorsMusicListLoader extends Thread
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t)
             {
-                isNormal.setValue(false);
+//                isNormal.setValue(false);
                 t.printStackTrace();
             }
         });

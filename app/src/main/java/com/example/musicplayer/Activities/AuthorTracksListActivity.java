@@ -32,6 +32,8 @@ public class AuthorTracksListActivity extends AppCompatActivity {
                 LinearLayoutManager.VERTICAL,
                 false));
 
+        ContentController.getAuthorsTracks().getValue();
+
         adapter = new MyRecyclerViewAdapter<MusicFile>(this, ContentController.getAuthorsTracks().getValue(), R.drawable.ic_music, R.layout.recyclerview_item_vertical);
 
         ContentController.getAuthorsTracks().observe(this, adapter::setData);

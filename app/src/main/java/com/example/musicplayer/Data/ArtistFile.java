@@ -17,6 +17,9 @@ public class ArtistFile  implements Serializable, ItemDrawable
     @SerializedName("imgPath")
     private String imgPath;
 
+    @SerializedName("_id")
+    private String id;
+
     @Override
     public String getTitle() {
         return name != null ? getName() : "автор неизвестен";
@@ -63,5 +66,13 @@ public class ArtistFile  implements Serializable, ItemDrawable
                 ", count=" + count +
                 ", imgPath='" + imgPath + '\'' +
                 '}';
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
