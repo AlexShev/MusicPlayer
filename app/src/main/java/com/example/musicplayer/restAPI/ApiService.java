@@ -42,5 +42,13 @@ public interface ApiService
     })
     Call<ResponseBody> getMusic(@Field("id") String id, @Header("Authorization") String auth);
 
+    @FormUrlEncoded
+    @POST("{path}/")
+    @Headers({
+            "Accept: */*",
+            "Content-Type: application/x-www-form-urlencoded",
+            // "Authorization: Bearer {token}",
+    })
+    Call<ResponseBody> getList(@Path(value = "path", encoded = true) String path, @Field("id") String id, @Header("Authorization") String auth);
 
 }

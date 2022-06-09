@@ -18,26 +18,26 @@ public class MusicRepository
         organizer = new DirectOrder(tracks);
     }
 
-    MusicFile getNext() {
+    public MusicFile getNext() {
         return organizer.getNext();
     }
 
-    MusicFile getCurrent() {
+    public MusicFile getCurrent() {
         return organizer.getCurrent();
     }
 
-    MusicFile getPreviousByOrder()
+    public MusicFile getPreviousByOrder()
     {
         return organizer.getPreviousByOrder();
     }
 
-    MusicFile getNextByOrder()
+    public MusicFile getNextByOrder()
     {
         return organizer.getNextByOrder();
     }
 
 
-    MusicFile setCurrent(int index) {
+    public MusicFile setCurrent(int index) {
         return organizer.setCurrent(index);
     }
 }

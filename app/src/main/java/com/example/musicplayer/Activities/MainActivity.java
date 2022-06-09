@@ -20,6 +20,7 @@ import com.example.musicplayer.Data.MusicFile;
 import com.example.musicplayer.MusicFileLouder;
 import com.example.musicplayer.MusicLoader;
 import com.example.musicplayer.R;
+import com.example.musicplayer.musicService.MusicRepository;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,21 +68,27 @@ public class MainActivity extends AppCompatActivity {
                 new MyRecyclerViewAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
+                        MusicRepository musicRepository = new MusicRepository(ContentController.getRecommendedTracks());
+                        musicRepository.setCurrent(position);
 
-                        MutableLiveData<String> stringUri = new MutableLiveData<>();
-                        new MusicFileLouder(MainActivity.this, stringUri).loadMusicURI(adapterRecommendedTrack.getItem(position).getPath());
+                        ContentController.Repository.setValue(musicRepository);
 
-                        stringUri.observe(MainActivity.this, new Observer<String>() {
-                            @Override
-                            public void onChanged(String s) {
-                                Uri uri = Uri.parse(s);
-
-                                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
-                                mediaPlayer.start();
-                            }
-                        });
-
-
+                        startActivity(new Intent(MainActivity.this, PlayMusicActivity.class));
+//
+//                        MutableLiveData<String> stringUri = new MutableLiveData<>();
+//                        new MusicFileLouder(MainActivity.this, stringUri).loadMusicURI(adapterRecommendedTrack.getItem(position).getPath());
+//
+//                        stringUri.observe(MainActivity.this, new Observer<String>() {
+//                            @Override
+//                            public void onChanged(String s) {
+//                                Uri uri = Uri.parse(s);
+//
+//                                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
+//                                mediaPlayer.start();
+//                            }
+//                        });
+//
+//
                         Toast.makeText(MainActivity.this, "You clicked " + adapterRecommendedTrack.getItemInfo(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -91,6 +98,13 @@ public class MainActivity extends AppCompatActivity {
                 new MyRecyclerViewAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
+                        MusicRepository musicRepository = new MusicRepository(ContentController.getRecommendedTracks());
+                        musicRepository.setCurrent(position);
+
+                        ContentController.Repository.setValue(musicRepository);
+
+                        startActivity(new Intent(MainActivity.this, PlayMusicActivity.class));
+
                         Toast.makeText(MainActivity.this, "You clicked " + adapterRecommendedAuthors.getItemInfo(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -109,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewRecommendedTrack.setAdapter(adapterRecommendedTrack);
         recyclerViewRecommendedAuthors.setAdapter(adapterRecommendedAuthors);
         recyclerViewPopularTrack.setAdapter(adapterPopularTrack);
+
+
+
 
 
         findViewById(R.id.more_recommendedTrack).setOnClickListener(
