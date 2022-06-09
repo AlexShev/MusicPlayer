@@ -28,12 +28,24 @@ public class MusicLikeButton {
         }
     }
 
+    public interface IOnClickListener{
+        void onClick(MusicLikeStates state);
+    }
+
     private ImageButton _button;
     private MusicLikeStates _state;
+    private IOnClickListener _listener;
 
     public MusicLikeButton(ImageButton button, boolean isLiked){
         this._button = button;
         this._state = (isLiked) ? MusicLikeStates.like : MusicLikeStates.unlike;
+
+        this._listener = new IOnClickListener() {
+            @Override
+            public void onClick(MusicLikeStates state) {
+
+            }
+        };
 
         this._button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,12 +55,17 @@ public class MusicLikeButton {
                     case 1: _state = MusicLikeStates.unlike; break;
                 }
                 changePicture();
+                _listener.onClick(_state);
             }
         });
     }
 
     public MusicLikeStates getState(){
         return this._state;
+    }
+
+    public void setOnClickListener(IOnClickListener onClickListener){
+        this._listener = onClickListener;
     }
 
     private void changePicture(){

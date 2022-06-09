@@ -32,13 +32,24 @@ public class MusicPlayModeButton {
         }
     }
 
+    public interface IOnClickListener {
+        void onClick(PlayModeStates state);
+    }
+
+
     final private ImageButton _button;
 
     private PlayModeStates _state;
+    private IOnClickListener _listener;
 
     public MusicPlayModeButton(ImageButton button){
         this._button = button;
         this._state = PlayModeStates.normal;
+        this._listener = new IOnClickListener() {
+            @Override
+            public void onClick(PlayModeStates state) {
+            }
+        };
         this._button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,12 +61,17 @@ public class MusicPlayModeButton {
                 }
 
                 changeImage();
+                _listener.onClick(_state);
             }
         });
     }
 
     public PlayModeStates getState(){
         return this._state;
+    }
+
+    public void setOnClickListener(IOnClickListener onClickListener){
+        this._listener = onClickListener;
     }
 
     private void changeImage(){
