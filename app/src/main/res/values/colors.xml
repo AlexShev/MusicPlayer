@@ -21,4 +21,6 @@
     <color name="font_light">#000</color>
     <color name="font_dark">#D4D4D4</color>
 
+    <color name="un_visible">#00000000</color>
+
 </resources>
