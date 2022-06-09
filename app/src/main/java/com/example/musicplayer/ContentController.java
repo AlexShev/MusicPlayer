@@ -1,10 +1,16 @@
 package com.example.musicplayer;
 
+import android.content.Context;
+
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.musicplayer.Data.ArtistFile;
 import com.example.musicplayer.Data.MusicFile;
 import com.example.musicplayer.musicService.MusicRepository;
+import com.example.musicplayer.musicService.MusicPlayer;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +18,16 @@ import java.util.List;
 public class ContentController
 {
     public static final MutableLiveData<MusicRepository> Repository;
+    public static final MutableLiveData<MusicPlayer> MusicPlayer;
+    public static LifecycleOwner lifecycleOwner;
+
 
     private static final MutableLiveData<List<MusicFile>> recommendedTracks;
     private static final MutableLiveData<List<ArtistFile>> recommendedAuthors;
     private static final MutableLiveData<List<MusicFile>> popularTracks;
 
     private static final MutableLiveData<List<MusicFile>> authorsTracks;
+
 
     enum ListType
     {
@@ -69,6 +79,21 @@ public class ContentController
         authorsTracks.setValue(temp);
 
         Repository = new MutableLiveData<>();
+        MusicPlayer = new MutableLiveData<>();
+    }
+
+    public static void observRepository(LifecycleOwner lifecycleOwner)
+    {
+        Repository.observe(lifecycleOwner, new Observer<MusicRepository>() {
+            @Override
+            public void onChanged(MusicRepository musicRepository) {
+
+                if (MusicPlayer.getValue() != null)
+                    MusicPlayer.getValue().dispose();
+
+                MusicPlayer.setValue(new MusicPlayer(Repository, (Context) lifecycleOwner));
+            }
+        });
     }
 
     public static void postRecommendedTrack(List<MusicFile> date)

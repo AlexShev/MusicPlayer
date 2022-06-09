@@ -64,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
 
         new MusicLoader(new MutableLiveData<>(), this).start();
 
+        ContentController.observRepository(this);
+
+
+
         adapterRecommendedTrack.setClickListener(
                 new MyRecyclerViewAdapter.ItemClickListener() {
                     @Override
@@ -73,8 +77,10 @@ public class MainActivity extends AppCompatActivity {
 
                         ContentController.Repository.setValue(musicRepository);
 
-                        startActivity(new Intent(MainActivity.this, PlayMusicActivity.class));
-//
+                        new Thread(()->ContentController.MusicPlayer.getValue().start()).start();
+
+                       // startActivity(new Intent(MainActivity.this, PlayMusicActivity.class));
+
 //                        MutableLiveData<String> stringUri = new MutableLiveData<>();
 //                        new MusicFileLouder(MainActivity.this, stringUri).loadMusicURI(adapterRecommendedTrack.getItem(position).getPath());
 //
