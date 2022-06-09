@@ -28,6 +28,8 @@ public class PlayMusicActivity extends AppCompatActivity {
     private MusicLikeButton musicLikeButton;
     private MusicPlayStopButton musicPlayStopButton;
 
+    private MutableLiveData<MusicFile> current = new MutableLiveData<>();
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,8 @@ public class PlayMusicActivity extends AppCompatActivity {
 
         title = findViewById(R.id.music_title_play);
         subtitle = findViewById(R.id.music_author_play);
+
+
 
         current.setValue(ContentController.Repository.getValue().getCurrent());
         current.observe(this, new Observer<MusicFile>() {
