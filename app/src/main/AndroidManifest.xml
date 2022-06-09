@@ -13,9 +13,15 @@
         android:theme="@style/Theme.MusicPlayer">
         <activity
             android:name=".Activities.PlayMusicActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
-            android:name=".Activities.ListActivity"
             android:name=".Activities.PopularTrackListActivity"
             android:exported="false" />
         <activity
@@ -32,14 +38,10 @@
             android:exported="false" />
         <activity
             android:name=".Activities.SplashActivity"
-            android:exported="true"
+            android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <meta-data
