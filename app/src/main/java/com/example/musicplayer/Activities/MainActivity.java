@@ -1,5 +1,6 @@
 package com.example.musicplayer.Activities;
 
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -11,6 +12,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
@@ -23,11 +25,14 @@ import com.example.musicplayer.MusicLoader;
 import com.example.musicplayer.R;
 import com.example.musicplayer.musicService.MusicRepository;
 
+import java.sql.Driver;
+
 public class MainActivity extends AppCompatActivity {
 
     private MyRecyclerViewAdapter<MusicFile> adapterRecommendedTrack;
     private MyRecyclerViewAdapter<ArtistFile> adapterRecommendedAuthors;
     private MyRecyclerViewAdapter<MusicFile> adapterPopularTrack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
     }
+
 }
 
 
