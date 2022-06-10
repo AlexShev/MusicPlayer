@@ -78,9 +78,9 @@ public class MainActivity extends AppCompatActivity {
 
                         ContentController.Repository.setValue(musicRepository);
 
-                        ContentController.MusicPlayer.getValue().start();
+                        // ContentController.MusicPlayer.getValue().start();
 
-                       // startActivity(new Intent(MainActivity.this, PlayMusicActivity.class));
+                       startActivity(new Intent(MainActivity.this, PlayMusicActivity.class));
 
 //                        MutableLiveData<String> stringUri = new MutableLiveData<>();
 //                        new MusicFileLouder(MainActivity.this, stringUri).loadMusicURI(adapterRecommendedTrack.getItem(position).getPath());

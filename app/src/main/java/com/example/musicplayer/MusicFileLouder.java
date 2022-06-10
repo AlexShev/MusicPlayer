@@ -16,16 +16,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MusicFileLouder
+public class MusicFileLouder extends Thread
 {
     private Context context;
     private MutableLiveData<String> uri;
+    private String id;
 
-    public MusicFileLouder(Context context, MutableLiveData<String> uri) {
+    public MusicFileLouder(Context context, MutableLiveData<String> uri, String id) {
         this.context = context;
         this.uri = uri;
+        this.id = id;
     }
 
+    @Override
+    public synchronized void run() {
+        loadMusicURI(id);
+    }
 
     public void loadMusicURI(String id)
     {
@@ -53,7 +59,7 @@ public class MusicFileLouder
 //                        Gson gJson = new Gson();
 //                        String u = gJson.fromJson(responseJSON, String.class);
 
-                        uri.setValue(responseJSON);
+                        uri.postValue(responseJSON);
                     }
                     catch (IOException e)
                     {

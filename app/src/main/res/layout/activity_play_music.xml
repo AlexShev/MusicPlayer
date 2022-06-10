@@ -76,6 +76,7 @@
         android:layout_marginHorizontal="24px">
 
         <SeekBar
+            android:id="@+id/seekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -85,6 +86,7 @@
             >
 
             <TextView
+                android:id="@+id/duration_played"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00:00"
@@ -92,6 +94,7 @@
 
 
             <TextView
+                android:id="@+id/duration_total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="99:99"/>
