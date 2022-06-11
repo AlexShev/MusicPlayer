@@ -2,6 +2,7 @@
 
 
 <androidx.drawerlayout.widget.DrawerLayout
+    android:id="@+id/drawer_main"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,56 +11,6 @@
     android:background="@color/background_light"
     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
     tools:context=".Activities.MainActivity">
-
-    <LinearLayout
-        android:layout_width="276dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/white"
-        android:orientation="vertical"
-        >
-
-        <TextView
-            android:layout_marginTop="100dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Аккаунт"
-            android:textSize="23dp"
-            android:textColor="@color/black"
-            android:gravity="center"
-            android:layout_marginBottom="28dp"/>
-
-        <Button
-            android:id="@+id/out_main"
-            android:layout_gravity="center"
-            android:layout_marginBottom="165dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Выйти"
-            android:textColor="#540FE8"
-            android:background="@drawable/button_outl"
-            />
-
-        <TextView
-            android:id="@+id/setting_main"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Настройки"
-            android:textColor="@color/black"
-            android:textSize="23dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginBottom="50dp"/>
-
-        <TextView
-            android:id="@+id/faq_main"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Обратная связь"
-            android:textColor="@color/black"
-            android:textSize="23dp"
-            android:layout_marginLeft="40dp"/>
-
-    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -70,12 +21,28 @@
         app:layout_constraintTop_toTopOf="parent"
         >
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/burger_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_burger"
+            tools:layout_editor_absoluteX="-24dp"
+            tools:layout_editor_absoluteY="-18dp"
+            android:background="@color/un_visible"
+            android:layout_margin="10dp"/>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
             android:orientation="vertical"
             >
+
+
 
             <TextView
                 android:id="@+id/title1"
@@ -249,5 +216,58 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
     </ScrollView>
+
+
+    <LinearLayout
+        android:layout_width="276dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:layout_marginTop="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Аккаунт"
+            android:textSize="23dp"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:layout_marginBottom="28dp"/>
+
+        <Button
+            android:id="@+id/out_main"
+            android:layout_gravity="center"
+            android:layout_marginBottom="165dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Выйти"
+            android:textColor="#540FE8"
+            android:background="@drawable/button_outl"
+            />
+
+        <TextView
+            android:id="@+id/setting_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Настройки"
+            android:textColor="@color/black"
+            android:textSize="23dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginBottom="50dp"/>
+
+        <TextView
+            android:id="@+id/faq_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Обратная связь"
+            android:textColor="@color/black"
+            android:textSize="23dp"
+            android:layout_marginLeft="40dp"/>
+
+    </LinearLayout>
+
 </androidx.drawerlayout.widget.DrawerLayout>

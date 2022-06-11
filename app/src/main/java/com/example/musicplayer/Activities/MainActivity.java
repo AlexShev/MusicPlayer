@@ -2,6 +2,8 @@ package com.example.musicplayer.Activities;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,8 +14,11 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.musicplayer.AuthorsMusicListLoader;
@@ -33,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     private MyRecyclerViewAdapter<ArtistFile> adapterRecommendedAuthors;
     private MyRecyclerViewAdapter<MusicFile> adapterPopularTrack;
 
+    private ImageButton burgerButton;
+    private DrawerLayout menu;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerViewRecommendedAuthors = findViewById(R.id.recommendedAuthors);
         RecyclerView recyclerViewPopularTrack = findViewById(R.id.popularTrack);
 
+        burgerButton = findViewById(R.id.burger_main);
 
         recyclerViewRecommendedTrack.setLayoutManager(new LinearLayoutManager(
                 MainActivity.this,
@@ -168,6 +177,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        menu = findViewById(R.id.drawer_main);
+
+        burgerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                menu.openDrawer(GravityCompat.START);
+            }
+        });
     }
 
 }
