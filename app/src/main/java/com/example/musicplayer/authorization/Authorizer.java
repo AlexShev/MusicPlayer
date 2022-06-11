@@ -66,4 +66,15 @@ public class Authorizer
             e.printStackTrace();
         }
     }
+
+    public static void logOut(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.remove("login");
+        editor.remove("password");
+        editor.remove("token");
+
+        editor.apply();
+    }
 }

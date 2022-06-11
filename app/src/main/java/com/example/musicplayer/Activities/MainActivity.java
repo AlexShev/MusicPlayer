@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ import com.example.musicplayer.Data.MusicFile;
 import com.example.musicplayer.MusicFileLouder;
 import com.example.musicplayer.MusicLoader;
 import com.example.musicplayer.R;
+import com.example.musicplayer.authorization.Authorizer;
 import com.example.musicplayer.musicService.MusicRepository;
 
 import java.sql.Driver;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton burgerButton;
     private DrawerLayout menu;
 
+    private Button outButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,12 +182,19 @@ public class MainActivity extends AppCompatActivity {
         );
 
         menu = findViewById(R.id.drawer_main);
+        outButton = findViewById(R.id.out_main);
 
         burgerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 menu.openDrawer(GravityCompat.START);
             }
+        });
+
+        outButton.setOnClickListener((v) -> {
+            Authorizer.logOut(MainActivity.this);
+            startActivity(new Intent(MainActivity.this, SignInActivity.class));
+            MainActivity.this.finish();
         });
     }
 
