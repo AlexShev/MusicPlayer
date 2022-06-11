@@ -6,14 +6,14 @@ import com.example.musicplayer.Data.MusicFile;
 
 import java.util.List;
 
-public class DirectOrder implements MusicQueueOrganizer
+public class CircleOrder  implements MusicQueueOrganizer
 {
     private final MutableLiveData<List<MusicFile>> tracks;
 
     private int currentItemIndex = 0;
     private int maxIndex;
 
-    public DirectOrder(MutableLiveData<List<MusicFile>> tracks) {
+    public CircleOrder(MutableLiveData<List<MusicFile>> tracks) {
         this.tracks = tracks;
 
         maxIndex = tracks.getValue().size() - 1;
@@ -26,14 +26,6 @@ public class DirectOrder implements MusicQueueOrganizer
 
     @Override
     public MusicFile getNext() {
-        getCurrent().setActive(false);
-        if (currentItemIndex == maxIndex)
-            currentItemIndex = 0;
-        else
-            currentItemIndex++;
-
-        MusicFile file = getCurrent();
-        file.setActive(true);
         return getCurrent();
     }
 
@@ -52,11 +44,21 @@ public class DirectOrder implements MusicQueueOrganizer
 
     @Override
     public MusicFile getNextByOrder() {
-        return getNext();
+        getCurrent().setActive(false);
+        if (currentItemIndex == maxIndex)
+            currentItemIndex = 0;
+        else
+            currentItemIndex++;
+        MusicFile file = getCurrent();
+        file.setActive(true);
+        return getCurrent();
     }
 
     @Override
     public void setCurrent(int index) {
+        if (tracks.getValue().size() != 0) {
+            getCurrent().setActive(false);
+        }
         currentItemIndex = index;
     }
 }

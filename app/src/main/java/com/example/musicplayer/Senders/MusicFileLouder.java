@@ -1,4 +1,4 @@
-package com.example.musicplayer;
+package com.example.musicplayer.Senders;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -54,10 +54,6 @@ public class MusicFileLouder extends Thread
                 else {
                     try {
                         String responseJSON = response.body().string();
-
-                        //
-//                        Gson gJson = new Gson();
-//                        String u = gJson.fromJson(responseJSON, String.class);
 
                         uri.postValue(responseJSON);
                     }

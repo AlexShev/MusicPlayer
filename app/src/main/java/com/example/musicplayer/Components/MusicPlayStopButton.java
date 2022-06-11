@@ -39,6 +39,9 @@ public class MusicPlayStopButton {
     public MusicPlayStopButton(ImageButton button, MusicPlayState musicPlayState){
         this._button = button;
         this._state = musicPlayState;
+
+        changePicture();
+
         this._listener = new IOnClickListener() {
             @Override
             public void onClick(MusicPlayState state) {
@@ -70,5 +73,10 @@ public class MusicPlayStopButton {
 
     private void changePicture(){
         this._button.setImageResource(this._state.getPicture());
+    }
+
+    public void performClick()
+    {
+        _button.performClick();
     }
 }

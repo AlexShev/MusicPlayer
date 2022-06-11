@@ -2,9 +2,12 @@ package com.example.musicplayer.musicService;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.musicplayer.Components.MusicPlayModeButton;
 import com.example.musicplayer.Data.MusicFile;
+import com.example.musicplayer.musicService.MusicQueueOrganizerStrategies.CircleOrder;
 import com.example.musicplayer.musicService.MusicQueueOrganizerStrategies.DirectOrder;
 import com.example.musicplayer.musicService.MusicQueueOrganizerStrategies.MusicQueueOrganizer;
+import com.example.musicplayer.musicService.MusicQueueOrganizerStrategies.RandomOrder;
 
 import java.util.List;
 
@@ -36,8 +39,22 @@ public class MusicRepository
         return organizer.getNextByOrder();
     }
 
+    public void setCurrent(int index) {
+        organizer.setCurrent(index);
+    }
 
-    public MusicFile setCurrent(int index) {
-        return organizer.setCurrent(index);
+    public void setMusicQueueOrganizer(MusicPlayModeButton.PlayModeStates mode)
+    {
+        switch (mode) {
+            case random:
+                organizer = new RandomOrder(tracks);
+                break;
+            case circle:
+                organizer = new CircleOrder(tracks);
+                break;
+            case normal:
+                organizer = new DirectOrder(tracks);
+                break;
+        }
     }
 }

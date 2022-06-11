@@ -8,6 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.musicplayer.Data.ItemDrawable;
@@ -22,20 +25,27 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 public class MyRecyclerViewAdapter<T extends ItemDrawable>
         extends RecyclerView.Adapter<MyRecyclerViewAdapter<T>.ViewHolder> {
 
-    private List<T> musicFiles;
+    private Context context;
+    private List<T> filesList;
     private int idPlaceholder;
     private int idItem;
+    int primaryTextColor;
+    int normalTextColor;
 
     private LayoutInflater mInflater;
 
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    MyRecyclerViewAdapter(Context context, List<T> musicFiles, int idPlaceholder, int idItem) {
+    MyRecyclerViewAdapter(Context context, List<T> filesList, int idPlaceholder, int idItem) {
         this.mInflater = LayoutInflater.from(context);
-        this.musicFiles = musicFiles;
+        this.context = context;
+        this.filesList = filesList;
         this.idPlaceholder = idPlaceholder;
         this.idItem = idItem;
+
+        primaryTextColor = ContextCompat.getColor(context, R.color.primary);
+        normalTextColor = ContextCompat.getColor(context, R.color.font_light);
     }
 
     // inflates the row layout from xml when needed
@@ -49,10 +59,10 @@ public class MyRecyclerViewAdapter<T extends ItemDrawable>
     // binds the data to the view and textview in each row
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        T music = musicFiles.get(position);
+        T item = filesList.get(position);
 
         Picasso.get()
-                .load(music.getPicturePath())
+                .load(item.getPicturePath())
                 .placeholder(idPlaceholder)
                 .error(idPlaceholder)
                 .centerCrop()
@@ -60,14 +70,25 @@ public class MyRecyclerViewAdapter<T extends ItemDrawable>
                 .transform(new RoundedCornersTransformation(10, 0)) // указываем градус, на который следует повернуть картинку
                 .into(holder.imageView);
 
-        holder.cardName.setText(music.getTitle());
-        holder.cardDefinition.setText(music.getSubTitle());
+        holder.cardName.setText(item.getTitle());
+        holder.cardDefinition.setText(item.getSubTitle());
+
+        if (item.isActive())
+        {
+            holder.cardName.setTextColor(primaryTextColor);
+            holder.cardDefinition.setTextColor(primaryTextColor);
+        }
+        else
+        {
+            holder.cardName.setTextColor(normalTextColor);
+            holder.cardDefinition.setTextColor(normalTextColor);
+        }
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return musicFiles.size();
+        return filesList.size();
     }
 
     // stores and recycles views as they are scrolled off screen
@@ -75,7 +96,6 @@ public class MyRecyclerViewAdapter<T extends ItemDrawable>
         ImageView imageView;
         TextView cardName;
         TextView cardDefinition;
-
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -93,10 +113,10 @@ public class MyRecyclerViewAdapter<T extends ItemDrawable>
 
     // convenience method for getting data at click position
     public String getItemInfo(int id) {
-        return musicFiles.get(id).getTitle();
+        return filesList.get(id).getTitle();
     }
 
-    public T getItem(int i) { return musicFiles.get(i); }
+    public T getItem(int i) { return filesList.get(i); }
 
     // allows clicks events to be caught
     public void setClickListener(ItemClickListener itemClickListener) {
@@ -110,9 +130,22 @@ public class MyRecyclerViewAdapter<T extends ItemDrawable>
 
     public void setData(List<T> musicFiles)
     {
-        if (musicFiles != null)
+        if (musicFiles != null && this.filesList != musicFiles)
         {
-            this.musicFiles = musicFiles;
+            this.filesList = musicFiles;
+
+            for (int i = 0; i < this.filesList.size(); i++) {
+                this.filesList.get(i).setObserver((LifecycleOwner) context, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean aBoolean) {
+                        if (aBoolean)
+                        {
+                            notifyDataSetChanged();
+                        }
+                    }
+                });
+            }
+
             notifyDataSetChanged();
         }
     }

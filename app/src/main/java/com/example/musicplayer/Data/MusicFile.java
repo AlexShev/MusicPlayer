@@ -1,12 +1,19 @@
 package com.example.musicplayer.Data;
 
+import android.net.Uri;
+
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+
 public class MusicFile implements Serializable, ItemDrawable
 {
-    @SerializedName("id")
+    @SerializedName("_id")
     private String id;
 
     @SerializedName("name")
@@ -25,7 +32,7 @@ public class MusicFile implements Serializable, ItemDrawable
     private String kind;
 
     @SerializedName("liked")
-    private Boolean liked;
+    private boolean liked;
 
     public MusicFile() { }
 
@@ -92,34 +99,52 @@ public class MusicFile implements Serializable, ItemDrawable
 
     @Override
     public String getTitle() {
-        return name;
+        return name != null ? name : "без названия";
     }
 
     @Override
-    public String getSubTitle() {
-        return author;
-    }
+    public String getSubTitle() { return author != null ? author : "аноним"; }
 
     @Override
     public String getPicturePath() {
         return imagePath;
     }
 
-    public Boolean getLiked() {
+    public boolean getLiked() {
         return liked;
     }
 
-    public void setLiked(Boolean liked) {
+    public void setLiked(boolean liked) {
         this.liked = liked;
     }
 
-    //    public String getImage() { return imagePath; }
-//    public String getAuthor() { return author; }
-//    public String getName() { return name; }
-//    public String getPath() { return path; }
-//
-//    public void setImage(int image) { this.image = image; }
-//    public void setAuthor(String author) { this.author = author; }
-//    public void setName(String name) { this.name = name; }
-//    public void setPath(String path) { this.path = path; }
+    public final MutableLiveData<Boolean> isPlaying = new MutableLiveData<>(false);
+
+    @Override
+    public boolean isActive() {
+        return isPlaying.getValue();
+    }
+
+    @Override
+    public void setActive(boolean state) {
+        isPlaying.setValue(state);
+    }
+
+    @Override
+    public void setObserver(LifecycleOwner owner, Observer<Boolean> observer)
+    {
+        isPlaying.observe(owner, observer);
+    }
+
+    private Uri cashUri = null;
+
+    public Uri getCashUri() {
+        return cashUri;
+    }
+
+    public void setCashUri(Uri cashUri) {
+        this.cashUri = cashUri;
+    }
+
+
 }

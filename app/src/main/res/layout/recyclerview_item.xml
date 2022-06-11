@@ -6,7 +6,10 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:clipToPadding="false"
-    android:padding="5dp">
+    android:paddingTop="5dp"
+    android:paddingLeft="5dp"
+    android:paddingBottom="8dp"
+    android:paddingRight="5dp">
 
 <androidx.cardview.widget.CardView
     android:layout_width="wrap_content"
@@ -38,6 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:textAppearance="@style/card_name"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/colorView" />
 
@@ -46,7 +51,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textAppearance="@style/card_definition"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
