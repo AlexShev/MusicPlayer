@@ -2,10 +2,12 @@ package com.example.musicplayer.Senders;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.musicplayer.Data.MusicFile;
 import com.example.musicplayer.restAPI.ApiClient;
 import com.example.musicplayer.restAPI.ApiService;
 
@@ -19,48 +21,52 @@ import retrofit2.Response;
 public class MusicFileLouder extends Thread
 {
     private Context context;
-    private MutableLiveData<String> uri;
-    private String id;
+    private MusicFile musicFile;
+    private Runnable runnable;
 
-    public MusicFileLouder(Context context, MutableLiveData<String> uri, String id) {
+    public MusicFileLouder(Context context, MusicFile musicFile, Runnable runnable) {
         this.context = context;
-        this.uri = uri;
-        this.id = id;
+        this.musicFile = musicFile;
+        this.runnable = runnable;
     }
 
     @Override
     public synchronized void run() {
-        loadMusicURI(id);
+        loadMusicURI();
     }
 
-    public void loadMusicURI(String id)
+    public void loadMusicURI()
     {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String token = preferences.getString("token", "");
 
         ApiService apiInterface = ApiClient.getClient().create(ApiService.class);
 
-        Call<ResponseBody> call = apiInterface.getMusic(id , "Bearer "+token);
+        Call<ResponseBody> call = apiInterface.getMusic(musicFile.getPath() , "Bearer "+token);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response)
-            {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 if (!response.isSuccessful())
                 {
 
                 }
                 else {
+                    String responseJSON = null;
                     try {
-                        String responseJSON = response.body().string();
 
-                        uri.postValue(responseJSON);
-                    }
-                    catch (IOException e)
-                    {
+                        if (response.body() != null) {
+                            responseJSON = response.body().string();
+                        } else {
+                            responseJSON = "";
+                        }
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
+
+                    musicFile.setCashUri(Uri.parse(responseJSON));
+                    runnable.run();
                 }
             }
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageButton;
@@ -22,9 +23,11 @@ import com.example.musicplayer.Senders.MusicFileLouder;
 import com.example.musicplayer.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.concurrent.Executor;
+
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-public class PlayMusicActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
+public class PlayMusicActivity extends AppCompatActivity {
 
     private TextView title;
     private TextView subtitle;
@@ -43,9 +46,13 @@ public class PlayMusicActivity extends AppCompatActivity implements MediaPlayer.
     private TextView durationTotal;
 
     static MediaPlayer mediaPlayer;
+    static Thread loaded;
+
     private Handler handler = new Handler();
 
     private Thread playTread, prevThread, nextThread;
+
+    private boolean byOrder = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,24 +66,24 @@ public class PlayMusicActivity extends AppCompatActivity implements MediaPlayer.
         if (!file.isActive())
             getIntentMethod();
 
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                if (mediaPlayer != null) {
-                    mediaPlayer.seekTo(progress * 1000);
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
+//        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+//                if (mediaPlayer != null) {
+//                    mediaPlayer.seekTo(progress * 1000);
+//                }
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//        });
 
         setMetaData();
 
@@ -100,14 +107,47 @@ public class PlayMusicActivity extends AppCompatActivity implements MediaPlayer.
             }
         });
 
-    //    playTreadBtn();
+        musicPlayStopButton.setOnClickListener(state -> {
+            if (mediaPlayer != null) {
+                switch (state) {
+                    case play:
+                        mediaPlayer.start();
+                        break;
+                    case pause:
+                        mediaPlayer.pause();
+                        break;
+                }
+            }
+        });
+
+        next.setOnClickListener((view)->
+        {
+            freeMusicPlayer();
+            byOrder = false;
+            ContentController.Repository.getValue().getNextByOrder();
+
+            getIntentMethod();
+            setMetaData();
+        });
+
+        prev.setOnClickListener((view)->
+        {
+            if (ContentController.Repository.getValue().getCurrent() != ContentController.Repository.getValue().getPreviousByOrder())
+            {
+                freeMusicPlayer();
+                byOrder = false;
+
+                getIntentMethod();
+                setMetaData();
+            }
+        });
     }
 
     @Override
     protected void onResume() {
-        playTreadBtn();
-        prevTreadBtn();
-        nextThreadBtn();
+        // playTreadBtn();
+     //   prevTreadBtn();
+     //   nextThreadBtn();
 
         super.onResume();
     }
@@ -151,7 +191,7 @@ public class PlayMusicActivity extends AppCompatActivity implements MediaPlayer.
     }
 
     private void playTreadBtn() {
-//        playTread = new Thread(()-> {
+        playTread = new Thread(()-> {
             musicPlayStopButton.setOnClickListener(state -> {
             if (mediaPlayer != null) {
                 switch (state) {
@@ -177,13 +217,13 @@ public class PlayMusicActivity extends AppCompatActivity implements MediaPlayer.
 //            }
 //        });
 
-//    });
-//        playTread.start();
+    });
+        playTread.start();
     }
 
     private void init() {
         ImageButton circleButton = this.findViewById(R.id.circle_button_play);
-        musicPlayModeButton = new MusicPlayModeButton(circleButton);
+        musicPlayModeButton = new MusicPlayModeButton(circleButton, ContentController.Repository.getValue().getOrganizerMode());
 
         title = findViewById(R.id.music_title_play);
         subtitle = findViewById(R.id.music_author_play);
@@ -214,15 +254,11 @@ public class PlayMusicActivity extends AppCompatActivity implements MediaPlayer.
         musicFile.setActive(true);
 
         if (musicFile.getCashUri() == null) {
-            MutableLiveData<String> uri = new MutableLiveData<>();
-
-            uri.observe(this, s -> {
-                System.out.println(s);
-                musicFile.setCashUri(Uri.parse(s));
-                initMediaPlayer(musicFile);
-            });
-
-            new MusicFileLouder(PlayMusicActivity.this, uri, musicFile.getPath()).start();
+            new MusicFileLouder(
+                    PlayMusicActivity.this,
+                    musicFile,
+                    ()-> initMediaPlayer(musicFile)
+            ).start();
         }
         else
         {
@@ -231,21 +267,20 @@ public class PlayMusicActivity extends AppCompatActivity implements MediaPlayer.
     }
 
     private void initMediaPlayer(MusicFile musicFile) {
-        new Thread(() -> {
-            mediaPlayer = MediaPlayer.create(getApplicationContext(), musicFile.getCashUri());
-            System.out.println(mediaPlayer);
-            seekBar.setMax(mediaPlayer.getDuration() / 1000);
+        loaded =  new Thread(() -> {
+            mediaPlayer = MediaPlayer.create(PlayMusicActivity.this, musicFile.getCashUri());
+
+            mediaPlayer.setOnCompletionListener(this::onCompletion);
+            loaded = null;
 
             runOnUiThread(() -> {
                 durationTotal.setText(formatedText(mediaPlayer.getDuration() / 1000));
+                seekBar.setMax(mediaPlayer.getDuration() / 1000);
                 musicPlayStopButton.performClick();
             });
+        });
 
-//
-//            if (musicPlayStopButton.getState() == MusicPlayStopButton.MusicPlayState.play) {
-//                mediaPlayer.start();
-//            }
-        }).start();
+        loaded.start();
     }
 
     private String formatedText(int currPos) {
@@ -262,7 +297,7 @@ public class PlayMusicActivity extends AppCompatActivity implements MediaPlayer.
                 .error(R.drawable.ic_music)
                 .centerCrop()
                 .resize(800, 800) // изменяем размер картинки до указанной ширины и высоты
-                .transform(new RoundedCornersTransformation(10, 0)) // указываем градус, на который следует повернуть картинку
+                .transform(new RoundedCornersTransformation(30, 0)) // указываем градус, на который следует повернуть картинку
                 .into(imageView);
 
         title.setText(musicFile.getTitle());
@@ -271,9 +306,15 @@ public class PlayMusicActivity extends AppCompatActivity implements MediaPlayer.
         musicLikeButton.changeState(musicFile.getLiked());
     }
 
-    @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        ContentController.Repository.getValue().getNext();
+        freeMusicPlayer();
+
+        if (byOrder)
+        {
+             ContentController.Repository.getValue().getNext();
+        }
+
+        byOrder = true;
         getIntentMethod();
         setMetaData();
     }

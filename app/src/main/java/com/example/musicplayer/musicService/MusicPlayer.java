@@ -30,7 +30,7 @@ public class MusicPlayer
 
         MutableLiveData<String> stringUri = new MutableLiveData<>();
 
-        new MusicFileLouder(context, stringUri, musicFile.getPath()).start();
+       // new MusicFileLouder(context, stringUri, musicFile.getPath()).start();
 
         stringUri.observe((LifecycleOwner) context, new Observer<String>() {
             @Override

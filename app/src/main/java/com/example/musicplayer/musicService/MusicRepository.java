@@ -16,9 +16,12 @@ public class MusicRepository
     private final MutableLiveData<List<MusicFile>> tracks;
     private MusicQueueOrganizer organizer;
 
+    private MusicPlayModeButton.PlayModeStates organizerMode;
+
     public MusicRepository(MutableLiveData<List<MusicFile>> tracks) {
         this.tracks = tracks;
-        organizer = new DirectOrder(tracks);
+        organizerMode = MusicPlayModeButton.PlayModeStates.normal;
+        organizer = new DirectOrder(tracks, -1);
     }
 
     public MusicFile getNext() {
@@ -43,18 +46,30 @@ public class MusicRepository
         organizer.setCurrent(index);
     }
 
+    public int getCurrentIndex() {
+        return organizer.getCurrentIndex();
+    }
+
     public void setMusicQueueOrganizer(MusicPlayModeButton.PlayModeStates mode)
     {
+        int currentItemIndex = getCurrentIndex();
         switch (mode) {
             case random:
-                organizer = new RandomOrder(tracks);
+                organizer = new RandomOrder(tracks, currentItemIndex);
+                organizerMode = MusicPlayModeButton.PlayModeStates.random;
                 break;
             case circle:
-                organizer = new CircleOrder(tracks);
+                organizer = new CircleOrder(tracks, currentItemIndex);
+                organizerMode = MusicPlayModeButton.PlayModeStates.circle;
                 break;
             case normal:
-                organizer = new DirectOrder(tracks);
+                organizer = new DirectOrder(tracks, currentItemIndex);
+                organizerMode = MusicPlayModeButton.PlayModeStates.normal;
                 break;
         }
+    }
+
+    public MusicPlayModeButton.PlayModeStates getOrganizerMode() {
+        return organizerMode;
     }
 }

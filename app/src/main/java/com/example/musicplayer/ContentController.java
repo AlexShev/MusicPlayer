@@ -18,7 +18,6 @@ import java.util.List;
 public class ContentController
 {
     public static final MutableLiveData<MusicRepository> Repository;
-    public static final MutableLiveData<MusicPlayer> MusicPlayer;
 
     private static final MutableLiveData<List<MusicFile>> recommendedTracks;
     private static final MutableLiveData<List<ArtistFile>> recommendedAuthors;
@@ -86,7 +85,6 @@ public class ContentController
         authorsTracks.setValue(new ArrayList<>());
 
         Repository = new MutableLiveData<>();
-        MusicPlayer = new MutableLiveData<>();
     }
 
 //    public static void observRepository(LifecycleOwner lifecycleOwner)

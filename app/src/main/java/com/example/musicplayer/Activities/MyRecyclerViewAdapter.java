@@ -62,7 +62,8 @@ public class MyRecyclerViewAdapter<T extends ItemDrawable>
         T item = filesList.get(position);
 
         Picasso.get()
-                .load(item.getPicturePath())
+              //  .load(item.getPicturePath())
+                .load(idPlaceholder)
                 .placeholder(idPlaceholder)
                 .error(idPlaceholder)
                 .centerCrop()

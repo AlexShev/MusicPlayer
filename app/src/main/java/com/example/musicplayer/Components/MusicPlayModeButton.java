@@ -42,14 +42,17 @@ public class MusicPlayModeButton {
     private PlayModeStates _state;
     private IOnClickListener _listener;
 
-    public MusicPlayModeButton(ImageButton button){
+    public MusicPlayModeButton(ImageButton button, PlayModeStates state){
         this._button = button;
-        this._state = PlayModeStates.normal;
+        this._state = state;
+        changeImage();
+
         this._listener = new IOnClickListener() {
             @Override
             public void onClick(PlayModeStates state) {
             }
         };
+
         this._button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

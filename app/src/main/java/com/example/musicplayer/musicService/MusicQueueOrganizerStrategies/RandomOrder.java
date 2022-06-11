@@ -17,18 +17,18 @@ public class RandomOrder implements MusicQueueOrganizer
 
     private final MutableLiveData<List<MusicFile>> tracks;
 
-    private final Queue<MusicFile> historyPrevious;
-    private final Stack<MusicFile> historyNext;
+    private final Stack<Integer> historyPrevious;
+    private final Stack<Integer> historyNext;
 
-    private int currentItemIndex = 0;
+    private int currentItemIndex;
     private int maxIndex;
 
-    public RandomOrder(MutableLiveData<List<MusicFile>> tracks) {
+    public RandomOrder(MutableLiveData<List<MusicFile>> tracks, int currentItemIndex) {
         this.tracks = tracks;
 
         maxIndex = tracks.getValue().size();
-
-        historyPrevious = new LinkedList<>();
+        this.currentItemIndex = currentItemIndex;
+        historyPrevious = new Stack<>();
         historyNext = new Stack<>();
     }
 
@@ -44,14 +44,23 @@ public class RandomOrder implements MusicQueueOrganizer
             MusicFile cur = getCurrent();
             cur.setActive(false);
 
-            MusicFile next = historyNext.pop();
-            historyPrevious.add(next);
-            next.setActive(true);
-            return next;
+            historyPrevious.add(currentItemIndex);
+            currentItemIndex = historyNext.pop();
+
+            getCurrent().setActive(true);
+            return getCurrent();
         }
         else
         {
-            return getNextByOrder();
+            MusicFile cur = getCurrent();
+            cur.setActive(false);
+
+            historyPrevious.add(currentItemIndex);
+            currentItemIndex = RANDOM.nextInt(maxIndex);
+
+            MusicFile file = getCurrent();
+            file.setActive(true);
+            return getCurrent();
         }
     }
 
@@ -59,39 +68,34 @@ public class RandomOrder implements MusicQueueOrganizer
     public MusicFile getPreviousByOrder() {
         if (!historyPrevious.isEmpty())
         {
-            MusicFile prev = historyPrevious.poll();
-            historyNext.add(prev);
-
-            return prev;
+            historyNext.add(currentItemIndex);
+            currentItemIndex = historyPrevious.pop();
         }
-        else
-        {
-            return getCurrent();
-        }
-    }
 
-    @Override
-    public MusicFile getNextByOrder() {
-        MusicFile cur = getCurrent();
-        cur.setActive(false);
-        historyPrevious.add(cur);
-
-        currentItemIndex = RANDOM.nextInt(maxIndex);
-
-        MusicFile file = getCurrent();
-        file.setActive(true);
+        getCurrent().setActive(true);
         return getCurrent();
     }
 
     @Override
+    public MusicFile getNextByOrder() {
+        return getNext();
+    }
+
+    @Override
     public void setCurrent(int index) {
-        if (tracks.getValue().size() != 0) {
+        if (tracks.getValue().size() != 0 && currentItemIndex != index && currentItemIndex > -1) {
             MusicFile cur = getCurrent();
             cur.setActive(false);
-            historyPrevious.add(cur);
+
+            historyPrevious.add(currentItemIndex);
             historyNext.clear();
         }
 
         currentItemIndex = index;
+    }
+
+    @Override
+    public int getCurrentIndex() {
+        return currentItemIndex;
     }
 }

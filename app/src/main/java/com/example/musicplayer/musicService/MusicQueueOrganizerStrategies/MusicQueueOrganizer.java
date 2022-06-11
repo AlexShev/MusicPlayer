@@ -14,5 +14,6 @@ public interface MusicQueueOrganizer
 
 
     void setCurrent(int index);
+    int getCurrentIndex();
 }
 

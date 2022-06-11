@@ -10,12 +10,12 @@ public class CircleOrder  implements MusicQueueOrganizer
 {
     private final MutableLiveData<List<MusicFile>> tracks;
 
-    private int currentItemIndex = 0;
+    private int currentItemIndex = -1;
     private int maxIndex;
 
-    public CircleOrder(MutableLiveData<List<MusicFile>> tracks) {
+    public CircleOrder(MutableLiveData<List<MusicFile>> tracks, int currentItemIndex) {
         this.tracks = tracks;
-
+        this.currentItemIndex = currentItemIndex;
         maxIndex = tracks.getValue().size() - 1;
     }
 
@@ -26,7 +26,9 @@ public class CircleOrder  implements MusicQueueOrganizer
 
     @Override
     public MusicFile getNext() {
-        return getCurrent();
+        MusicFile file = getCurrent();
+        file.setActive(true);
+        return file;
     }
 
     @Override
@@ -57,8 +59,14 @@ public class CircleOrder  implements MusicQueueOrganizer
     @Override
     public void setCurrent(int index) {
         if (tracks.getValue().size() != 0) {
-            getCurrent().setActive(false);
+            if (currentItemIndex > -1 && currentItemIndex != index)
+                getCurrent().setActive(false);
         }
         currentItemIndex = index;
+    }
+
+    @Override
+    public int getCurrentIndex() {
+        return currentItemIndex;
     }
 }

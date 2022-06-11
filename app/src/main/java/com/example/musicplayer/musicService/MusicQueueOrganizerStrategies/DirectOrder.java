@@ -10,13 +10,14 @@ public class DirectOrder implements MusicQueueOrganizer
 {
     private final MutableLiveData<List<MusicFile>> tracks;
 
-    private int currentItemIndex = 0;
+    private int currentItemIndex;
     private int maxIndex;
 
-    public DirectOrder(MutableLiveData<List<MusicFile>> tracks) {
+    public DirectOrder(MutableLiveData<List<MusicFile>> tracks, int currentItemIndex) {
         this.tracks = tracks;
 
         maxIndex = tracks.getValue().size() - 1;
+        this.currentItemIndex = currentItemIndex;
     }
 
     @Override
@@ -57,6 +58,15 @@ public class DirectOrder implements MusicQueueOrganizer
 
     @Override
     public void setCurrent(int index) {
+        if (tracks.getValue().size() != 0) {
+            if (currentItemIndex > -1 && currentItemIndex != index)
+                getCurrent().setActive(false);
+        }
         currentItemIndex = index;
+    }
+
+    @Override
+    public int getCurrentIndex() {
+        return currentItemIndex;
     }
 }

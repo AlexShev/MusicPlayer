@@ -72,33 +72,21 @@ public class MainActivity extends AppCompatActivity {
                         if (currType != ContentController.ListType.recommendedTrack){
                             ContentController.setCurrType(ContentController.ListType.recommendedTrack);
                             MusicRepository musicRepository = new MusicRepository(ContentController.getRecommendedTracks());
-
-                            // здесь надо делать проверку на текущую позицию
                             musicRepository.setCurrent(position);
                             ContentController.Repository.setValue(musicRepository);
                         }
                         else
                         {
                             MusicRepository musicRepository = ContentController.Repository.getValue();
-                            musicRepository.setCurrent(position);
+                            // здесь надо делать проверку на текущую позицию
+                            if (musicRepository.getCurrentIndex() != position)
+                            {
+                                musicRepository.setCurrent(position);
+                            }
                         }
 
                         startActivity(new Intent(MainActivity.this, PlayMusicActivity.class));
 
-//                        MutableLiveData<String> stringUri = new MutableLiveData<>();
-//                        new MusicFileLouder(MainActivity.this, stringUri).loadMusicURI(adapterRecommendedTrack.getItem(position).getPath());
-//
-//                        stringUri.observe(MainActivity.this, new Observer<String>() {
-//                            @Override
-//                            public void onChanged(String s) {
-//                                Uri uri = Uri.parse(s);
-//
-//                                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
-//                                mediaPlayer.start();
-//                            }
-//                        });
-//
-//
                         Toast.makeText(MainActivity.this, "You clicked " + adapterRecommendedTrack.getItemInfo(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
                     }
                 }
