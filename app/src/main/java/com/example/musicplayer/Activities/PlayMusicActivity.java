@@ -1,6 +1,7 @@
 package com.example.musicplayer.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.MutableLiveData;
 
 import android.media.MediaPlayer;
@@ -8,10 +9,16 @@ import android.media.TimedText;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.example.musicplayer.Components.MusicLikeButton;
 import com.example.musicplayer.Components.MusicPlayModeButton;
@@ -33,6 +40,8 @@ public class PlayMusicActivity extends AppCompatActivity {
     private TextView title;
     private TextView subtitle;
 
+    private GestureDetectorCompat lSwipeDetector;
+
     private ImageView imageView;
 
     private MusicPlayModeButton musicPlayModeButton;
@@ -41,6 +50,10 @@ public class PlayMusicActivity extends AppCompatActivity {
     private MusicPlayStopButton musicPlayStopButton;
     private ImageButton prev;
     private ImageButton next;
+
+    private ViewSwitcher viewSwitcher;
+    Animation slide_in_left, slide_out_right;
+    Animation slide_out_left, slide_in_right;
 
     private SeekBar seekBar;
     private TextView durationPlayed;
@@ -52,6 +65,12 @@ public class PlayMusicActivity extends AppCompatActivity {
     private Timer timer = new Timer();
 
     private boolean byOrder = true;
+    int i;
+
+    private static final int SWIPE_MIN_DISTANCE = 130;
+    private static final int SWIPE_MAX_DISTANCE = 300;
+    private static final int SWIPE_MIN_VELOCITY = 200;
+
 
     private MutableLiveData<String> currDer = new MutableLiveData<>();
     private MutableLiveData<String> maxDer = new MutableLiveData<>();
@@ -136,6 +155,13 @@ public class PlayMusicActivity extends AppCompatActivity {
                 setMetaData();
             }
         });
+
+        viewSwitcher.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return lSwipeDetector.onTouchEvent(event);
+            }
+        });
     }
 
     private String formatedText(int currPos) {
@@ -180,6 +206,9 @@ public class PlayMusicActivity extends AppCompatActivity {
         ImageButton circleButton = this.findViewById(R.id.circle_button_play);
         musicPlayModeButton = new MusicPlayModeButton(circleButton, ContentController.Repository.getValue().getOrganizerMode());
 
+        lSwipeDetector = new GestureDetectorCompat(this, new MyGestureListener());
+        viewSwitcher = findViewById(R.id.switcher_play);
+
         title = findViewById(R.id.music_title_play);
         subtitle = findViewById(R.id.music_author_play);
         imageView = findViewById(R.id.image);
@@ -200,6 +229,13 @@ public class PlayMusicActivity extends AppCompatActivity {
         seekBar = findViewById(R.id.seekbar);
         durationPlayed = findViewById(R.id.duration_played);
         durationTotal = findViewById(R.id.duration_total);
+
+        slide_in_left = AnimationUtils.loadAnimation(PlayMusicActivity.this,
+                android.R.anim.slide_in_left);
+        slide_out_right = AnimationUtils.loadAnimation(PlayMusicActivity.this,
+                android.R.anim.slide_out_right);
+        viewSwitcher.setInAnimation(slide_in_left);
+        viewSwitcher.setOutAnimation(slide_out_right);
     }
 
     private void getIntentMethod() {
@@ -287,5 +323,27 @@ public class PlayMusicActivity extends AppCompatActivity {
         getIntentMethod();
         setMetaData();
     }
+
+    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener{
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY){
+            if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_MIN_VELOCITY) {
+                viewSwitcher.showPrevious();
+                return false;
+            }
+            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_MIN_VELOCITY) {
+                viewSwitcher.showNext();
+                return false;
+            }
+            return false;
+        }
+    }
 }
+
+
+
 
