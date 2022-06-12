@@ -4,14 +4,12 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
-import com.example.musicplayer.Activities.MainActivity;
 import com.example.musicplayer.Data.MusicFile;
-import com.example.musicplayer.MusicFileLouder;
+import com.example.musicplayer.Senders.MusicFileLouder;
 
 public class MusicPlayer
 {
@@ -32,7 +30,7 @@ public class MusicPlayer
 
         MutableLiveData<String> stringUri = new MutableLiveData<>();
 
-        new MusicFileLouder(context, stringUri, musicFile.getPath()).start();
+       // new MusicFileLouder(context, stringUri, musicFile.getPath()).start();
 
         stringUri.observe((LifecycleOwner) context, new Observer<String>() {
             @Override

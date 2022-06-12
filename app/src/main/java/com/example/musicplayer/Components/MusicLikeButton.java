@@ -39,6 +39,7 @@ public class MusicLikeButton {
     public MusicLikeButton(ImageButton button, boolean isLiked){
         this._button = button;
         this._state = (isLiked) ? MusicLikeStates.like : MusicLikeStates.unlike;
+        changePicture();
 
         this._listener = new IOnClickListener() {
             @Override
@@ -70,5 +71,10 @@ public class MusicLikeButton {
 
     private void changePicture(){
         this._button.setImageResource(this._state.getPicture());
+    }
+
+    public void changeState(boolean isLiked) {
+        this._state = (isLiked) ? MusicLikeStates.like : MusicLikeStates.unlike;
+        changePicture();
     }
 }

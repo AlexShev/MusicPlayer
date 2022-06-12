@@ -51,4 +51,13 @@ public interface ApiService
     })
     Call<ResponseBody> getList(@Path(value = "path", encoded = true) String path, @Field("id") String id, @Header("Authorization") String auth);
 
+
+    @FormUrlEncoded
+    @POST("grade/like/")
+    @Headers({
+            "Accept: */*",
+            "Content-Type: application/x-www-form-urlencoded",
+            // "Authorization: Bearer {token}",
+    })
+    Call<ResponseBody> setMusicReaction(@Field("id") String id, @Header("Authorization") String auth);
 }

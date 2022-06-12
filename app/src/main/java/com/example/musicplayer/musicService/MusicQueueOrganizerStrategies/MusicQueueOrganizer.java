@@ -13,6 +13,7 @@ public interface MusicQueueOrganizer
     MusicFile getNextByOrder();
 
 
-    MusicFile setCurrent(int index);
+    void setCurrent(int index);
+    int getCurrentIndex();
 }
 

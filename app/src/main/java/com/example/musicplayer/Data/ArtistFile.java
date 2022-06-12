@@ -1,5 +1,9 @@
 package com.example.musicplayer.Data;
 
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -22,12 +26,12 @@ public class ArtistFile  implements Serializable, ItemDrawable
 
     @Override
     public String getTitle() {
-        return name != null ? getName() : "автор неизвестен";
+        return name != null ? getName() : "аноним";
     }
 
     @Override
     public String getSubTitle() {
-        return count != -1 ? getCount() : "нет информации";
+        return count != -1 ? getCount() : "нет треков";
     }
 
     @Override
@@ -74,5 +78,23 @@ public class ArtistFile  implements Serializable, ItemDrawable
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public final MutableLiveData<Boolean> isChosen = new MutableLiveData<>(false);
+
+    @Override
+    public boolean isActive() {
+        return isChosen.getValue();
+    }
+
+    @Override
+    public void setActive(boolean state) {
+        isChosen.setValue(state);
+    }
+
+    @Override
+    public void setObserver(LifecycleOwner owner, Observer<Boolean> observer)
+    {
+        isChosen.observe(owner, observer);
     }
 }

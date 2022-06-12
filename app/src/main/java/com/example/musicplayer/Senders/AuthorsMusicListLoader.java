@@ -1,4 +1,4 @@
-package com.example.musicplayer;
+package com.example.musicplayer.Senders;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.musicplayer.ContentController;
 import com.example.musicplayer.Data.ArtistFile;
 import com.example.musicplayer.Data.MusicFile;
 import com.example.musicplayer.restAPI.ApiClient;
@@ -26,17 +27,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MusicLoader extends Thread
+public class AuthorsMusicListLoader extends Thread
 {
-    private MutableLiveData<Boolean> isNormal;
+//    private MutableLiveData<Boolean> isNormal;
 
-    public MusicLoader(MutableLiveData<Boolean> isNormal, Context context) {
-        this.isNormal = isNormal;
+    public AuthorsMusicListLoader(/*MutableLiveData<Boolean> isNormal, */Context context, String id) {
+        // this.isNormal = isNormal;
         this.context = context;
+        this.id = id;
     }
 
     private Context context;
     private String token;
+    private String id;
 
     @Override
     public synchronized void run()
@@ -44,37 +47,22 @@ public class MusicLoader extends Thread
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         token = preferences.getString("token", "");
 
-        try
-        {
-            loadList(ContentController.ListType.recommendedTrack, new TypeToken<ArrayList<MusicFile>>() {}.getType());
-
-            loadList(ContentController.ListType.recommendedAuthors, new TypeToken<ArrayList<ArtistFile>>() {}.getType());
-
-            loadList(ContentController.ListType.popularTracks, new TypeToken<ArrayList<MusicFile>>() {}.getType());
-
-        }
-        catch (IOException e)
-        {
-            isNormal.setValue(false);
-
-            e.printStackTrace();
-        }
+        loadList();
     }
 
-    private void loadList(ContentController.ListType type, Type arraytype) throws IOException
+    private void loadList()
     {
         ApiService apiInterface = ApiClient.getClient().create(ApiService.class);
 
-        Call<ResponseBody> call = apiInterface.getList(type.getPath(), "Bearer "+token);
+        Call<ResponseBody> call = apiInterface.getList(ContentController.ListType.authorsTrack.getPath(), id ,"Bearer "+token);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response)
             {
-
                 if (!response.isSuccessful())
                 {
-                    isNormal.setValue(false);
+//                    isNormal.setValue(false);
                 }
                 else {
                     try {
@@ -82,21 +70,21 @@ public class MusicLoader extends Thread
 
                         JsonParser jsonParser = new JsonParser();
                         JsonObject jo = (JsonObject) jsonParser.parse(responseJSON);
-                        JsonArray jArray = jo.getAsJsonArray(type.getType()); // get json array
+                        JsonArray jArray = jo.getAsJsonArray(ContentController.ListType.authorsTrack.getType()); // get json array
 
                         Gson gJson = new Gson();
-                        List jsonObjArrayList = gJson.fromJson(jArray, arraytype);
+                        List<MusicFile> jsonObjArrayList = gJson.fromJson(jArray, new TypeToken<ArrayList<MusicFile>>() {}.getType());
 
                         for (Object o : jsonObjArrayList)
                             System.out.println(o);
 
-                        ContentController.postSetList(type, jsonObjArrayList);
+                        ContentController.postAuthorTracks(jsonObjArrayList);
 
-                        isNormal.setValue(true);
+//                        isNormal.setValue(true);
                     }
                     catch (IOException e)
                     {
-                        isNormal.setValue(false);
+//                        isNormal.setValue(false);
                         e.printStackTrace();
                         System.out.println("gbplf");
                     }
@@ -106,9 +94,11 @@ public class MusicLoader extends Thread
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t)
             {
-                isNormal.setValue(false);
+//                isNormal.setValue(false);
                 t.printStackTrace();
             }
         });
     }
+
+
 }

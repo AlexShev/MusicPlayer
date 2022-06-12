@@ -5,13 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 
 import android.view.Gravity;
@@ -22,12 +19,11 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.musicplayer.AuthorsMusicListLoader;
+import com.example.musicplayer.Senders.AuthorsMusicListLoader;
 import com.example.musicplayer.ContentController;
 import com.example.musicplayer.Data.ArtistFile;
 import com.example.musicplayer.Data.MusicFile;
-import com.example.musicplayer.MusicFileLouder;
-import com.example.musicplayer.MusicLoader;
+import com.example.musicplayer.Senders.MusicLoader;
 import com.example.musicplayer.R;
 import com.example.musicplayer.authorization.Authorizer;
 import com.example.musicplayer.musicService.MusicRepository;
@@ -82,37 +78,32 @@ public class MainActivity extends AppCompatActivity {
 
         new MusicLoader(new MutableLiveData<>(), this).start();
 
-        ContentController.observRepository(this);
-
-
+       // ContentController.observRepository(this);
 
         adapterRecommendedTrack.setClickListener(
                 new MyRecyclerViewAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        MusicRepository musicRepository = new MusicRepository(ContentController.getRecommendedTracks());
-                        musicRepository.setCurrent(position);
+                        ContentController.ListType currType = ContentController.getCurrType();
 
-                        ContentController.Repository.setValue(musicRepository);
+                        if (currType != ContentController.ListType.recommendedTrack){
+                            ContentController.setCurrType(ContentController.ListType.recommendedTrack);
+                            MusicRepository musicRepository = new MusicRepository(ContentController.getRecommendedTracks());
+                            musicRepository.setCurrent(position);
+                            ContentController.Repository.setValue(musicRepository);
+                        }
+                        else
+                        {
+                            MusicRepository musicRepository = ContentController.Repository.getValue();
+                            // здесь надо делать проверку на текущую позицию
+                            if (musicRepository.getCurrentIndex() != position)
+                            {
+                                musicRepository.setCurrent(position);
+                            }
+                        }
 
-                        // ContentController.MusicPlayer.getValue().start();
+                        startActivity(new Intent(MainActivity.this, PlayMusicActivity.class));
 
-                       startActivity(new Intent(MainActivity.this, PlayMusicActivity.class));
-
-//                        MutableLiveData<String> stringUri = new MutableLiveData<>();
-//                        new MusicFileLouder(MainActivity.this, stringUri).loadMusicURI(adapterRecommendedTrack.getItem(position).getPath());
-//
-//                        stringUri.observe(MainActivity.this, new Observer<String>() {
-//                            @Override
-//                            public void onChanged(String s) {
-//                                Uri uri = Uri.parse(s);
-//
-//                                MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
-//                                mediaPlayer.start();
-//                            }
-//                        });
-//
-//
                         Toast.makeText(MainActivity.this, "You clicked " + adapterRecommendedTrack.getItemInfo(position) + " on item position " + position, Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -122,11 +113,18 @@ public class MainActivity extends AppCompatActivity {
                 new MyRecyclerViewAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        MusicRepository musicRepository = new MusicRepository(ContentController.getRecommendedTracks());
-                        musicRepository.setCurrent(position);
+                        ContentController.ListType currType = ContentController.getCurrType();
+
+                        if (currType != ContentController.ListType.recommendedAuthors){
+                            ContentController.setCurrType(ContentController.ListType.recommendedAuthors);
+
+                        }
+
+                        MusicRepository musicRepository = new MusicRepository(ContentController.getAuthorsTracks());
+                        musicRepository.setCurrent(0);
 
                         // ContentController.Repository.setValue(musicRepository);
-
+                        adapterRecommendedAuthors.getItem(position).setActive(true);
                         new AuthorsMusicListLoader(MainActivity.this, adapterRecommendedAuthors.getItem(position).getId()).start();
 
                         startActivity(new Intent(MainActivity.this, AuthorTracksListActivity.class));

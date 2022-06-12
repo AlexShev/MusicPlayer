@@ -18,9 +18,6 @@ import java.util.List;
 public class ContentController
 {
     public static final MutableLiveData<MusicRepository> Repository;
-    public static final MutableLiveData<MusicPlayer> MusicPlayer;
-    public static LifecycleOwner lifecycleOwner;
-
 
     private static final MutableLiveData<List<MusicFile>> recommendedTracks;
     private static final MutableLiveData<List<ArtistFile>> recommendedAuthors;
@@ -28,8 +25,17 @@ public class ContentController
 
     private static final MutableLiveData<List<MusicFile>> authorsTracks;
 
+    private static ListType currType;
 
-    enum ListType
+    public static ListType getCurrType() {
+        return currType;
+    }
+
+    public static void setCurrType(ListType currType) {
+        ContentController.currType = currType;
+    }
+
+    public enum ListType
     {
         recommendedTrack("musicList", "music/list"),
         recommendedAuthors("authorList", "author/list"),
@@ -79,22 +85,21 @@ public class ContentController
         authorsTracks.setValue(new ArrayList<>());
 
         Repository = new MutableLiveData<>();
-        MusicPlayer = new MutableLiveData<>();
     }
 
-    public static void observRepository(LifecycleOwner lifecycleOwner)
-    {
-        Repository.observe(lifecycleOwner, new Observer<MusicRepository>() {
-            @Override
-            public void onChanged(MusicRepository musicRepository) {
-
-                if (MusicPlayer.getValue() != null)
-                    MusicPlayer.getValue().dispose();
-
-                MusicPlayer.setValue(new MusicPlayer(Repository, (Context) lifecycleOwner));
-            }
-        });
-    }
+//    public static void observRepository(LifecycleOwner lifecycleOwner)
+//    {
+//        Repository.observe(lifecycleOwner, new Observer<MusicRepository>() {
+//            @Override
+//            public void onChanged(MusicRepository musicRepository) {
+//
+//                if (MusicPlayer.getValue() != null)
+//                    MusicPlayer.getValue().dispose();
+//
+//                MusicPlayer.setValue(new MusicPlayer(Repository, (Context) lifecycleOwner));
+//            }
+//        });
+//    }
 
     public static void postRecommendedTrack(List<MusicFile> date)
     {
@@ -147,8 +152,10 @@ public class ContentController
                 break;
             case popularTracks:
                 postPopularTracks((List<MusicFile>)(list));
+                break;
             case authorsTrack:
                 postAuthorTracks((List<MusicFile>)(list));
+                break;
         }
     }
 
